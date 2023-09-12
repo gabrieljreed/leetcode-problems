@@ -3,8 +3,8 @@
 
 class Solution:
     """LeetCode Solution class."""
+
     # TODO: it would be nice to create a snippet for leetcode problems
-    # TODO: Make this a git repo
 
     def isPalindrome(self, x: int) -> bool:
         if x < 0:
