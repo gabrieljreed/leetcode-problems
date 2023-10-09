@@ -2,6 +2,28 @@
 
 
 class Solution:
+    def binarySearch(self, nums: list[int], target: int) -> int:
+        lower = 0
+        pivot = len(nums) // 2
+        upper = len(nums) - 1
+
+        while lower <= upper:
+            pivot = ((upper - lower) // 2) + lower
+
+            if nums[pivot] == target:
+                # Found
+                return pivot
+
+            elif nums[pivot] > target:
+                # Too high, look lower
+                upper = pivot - 1
+
+            elif nums[pivot] < target:
+                # Too low, look higher
+                lower = pivot + 1
+
+        return -1
+
     def searchRange(self, nums: list[int], target: int) -> list[int]:
         if len(nums) == 1:
             if nums[0] == target:
@@ -10,51 +32,30 @@ class Solution:
                 return [-1, -1]
 
         # Binary search to the number, then expand outwards to find the bounds
+        pivot = self.binarySearch(nums, target)
 
-        lower = 0
-        pivot = len(nums) // 2
-        upper = len(nums) - 1
-
-        while True:
-            if nums[pivot] == target:
-                # Found
-                break
-
-            if upper <= lower:
-                # Target was not found, return
-                return [-1, -1]
-
-            if nums[pivot] > target:
-                # Too high, look lower
-                upper = pivot
-                newPivot = ((upper - lower) // 2) + lower
-                if newPivot == pivot:
-                    newPivot -= 1
-                pivot = newPivot
-
-            elif nums[pivot] < target:
-                # Too low, look higher
-                lower = pivot
-                newPivot = ((upper - lower) // 2) + lower
-                if newPivot == pivot:
-                    newPivot += 1
-                pivot = newPivot
+        if pivot == -1:
+            return [-1, -1]
 
         start = pivot
         end = pivot
 
-        while nums[start] == target:
-            start -= 1
+        for i in range(pivot, 0, -1):
+            if nums[i - 1] != target:
+                break
+            start = i - 1
 
-        while nums[end] == target:
-            end += 1
+        for i in range(pivot, len(nums)):
+            if nums[i] != target:
+                break
+            end = i
 
         return [start, end]
 
 
 if __name__ == "__main__":
     solutionFinder = Solution()
-    nums = [5, 7, 7, 8, 8, 10]
-    target = 9
+    nums = [5,7,7,8,8,10]
+    target = 10
     solution = solutionFinder.searchRange(nums, target)
     print(solution)
